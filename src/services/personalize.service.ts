@@ -85,3 +85,104 @@ export const addTechSkillService = async (
 
   return techSkill;
 };
+
+export const updateTechSkillService = async (
+  id: number,
+  data: { name?: string; iconUrl?: string | null }
+) => {
+  const existingSkill = await prisma.techSkill.findUnique({
+    where: { id },
+  });
+
+  if (!existingSkill) {
+    throw createError("Not Found", "Tech skill not found", 404);
+  }
+
+  const updated = await prisma.techSkill.update({
+    where: { id },
+    data,
+  });
+
+  logger.info(`Tech skill ${id} updated`);
+
+  return updated;
+};
+
+export const deleteTechSkillService = async (id: number) => {
+  const existingSkill = await prisma.techSkill.findUnique({
+    where: { id }
+  })
+
+  if (!existingSkill) {
+    throw createError("Not Found", "Tech skill not found", 404);
+  }
+
+  const deleted = await prisma.techSkill.delete({
+    where: { id }
+  });
+
+  return deleted;
+} 
+
+export const addStatService = async (
+  personalizeId: number,
+  label: string,
+  value: string
+) => {
+  const personalize = await prisma.personalize.findUnique({
+    where: { id: personalizeId }
+  });
+
+  if (!personalize) {
+    throw createError("Not Found", "Personalize not found", 404);
+  }
+
+  const stat = await prisma.stat.create({
+    data: {
+      label,
+      value,
+      personalizeId
+    }
+  });
+
+  return stat;
+};
+
+export const updateStatService = async (
+  id: number,
+  label?: string,
+  value?: string,
+) => {
+  const existingStat = await prisma.stat.findUnique({
+    where: { id },
+    include: { personalize: true }
+  });
+
+  if (!existingStat) {
+    throw createError("Not Found", "Stat not found", 404);
+  }
+
+  const updated = await prisma.stat.update({
+    where: { id },
+    data: { label, value }
+  });
+
+  return updated;
+};
+
+export const deleteStatService = async (id: number) => {
+  const existingStat = await prisma.stat.findUnique({
+    where: { id },
+    include: { personalize: true }
+  });
+
+  if (!existingStat) {
+    throw createError("Not Found", "Stat not found", 404);
+  }
+
+  const deleted = await prisma.stat.delete({
+    where: { id }
+  });
+
+  return deleted;
+};
