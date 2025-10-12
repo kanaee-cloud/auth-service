@@ -37,31 +37,64 @@ model RefreshToken {
 }
 
 model Personalize {
-  id          Int       @id @default(autoincrement())
-  name        String
-  age         Int
-  bio         String?
-  avatarUrl   String?   
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  age       Int
+  bio       String?  @db.Text
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  stats       Stat[]
-  techSkills  TechSkill[]
+  stats      Stat[]
+  techSkills TechSkill[]
 }
 
 model Stat {
-  id        Int     @id @default(autoincrement())
-  label     String  
-  value     String
+  id            Int         @id @default(autoincrement())
+  label         String
+  value         String
   personalizeId Int
   personalize   Personalize @relation(fields: [personalizeId], references: [id])
 }
 
 model TechSkill {
-  id            Int     @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   name          String
   iconUrl       String?
   personalizeId Int
   personalize   Personalize @relation(fields: [personalizeId], references: [id])
 }
 
+model About {
+  id          Int      @id @default(autoincrement())
+  description String   @db.Text
+  cvUrl       String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model WorkExperience {
+  id        Int       @id @default(autoincrement())
+  title     String
+  company   String
+  imgUrl    String?   @db.Text
+  location  String?
+  startDate DateTime
+  endDate   DateTime?
+  type      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Education {
+  id        Int       @id @default(autoincrement())
+  school    String
+  imgUrl    String?   @db.Text
+  major     String?
+  location  String?
+  startDate DateTime
+  endDate   DateTime?
+  status    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

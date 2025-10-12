@@ -8,7 +8,8 @@
     "start": "node dist/server.js",
     "dev": "nodemon api/server.ts",
     "build": "npx tsc",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts",
+    "seed-about" : "ts-node prisma/aboutSeed.ts"
   },
   "keywords": [],
   "author": "",
