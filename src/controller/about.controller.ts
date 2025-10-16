@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../exceptions/async_handler.exception";
-import { addEducationService, addWorkExperienceService, deleteEducationService, deleteWorkExperienceService, getAboutService, getEducationService, getWorkExperience, updateAboutService } from "../services/about.service";
+import { addEducationService, addWorkExperienceService, deleteEducationService, deleteWorkExperienceService, getAboutService, getEducationService, getWorkExperience, updateAboutService, updateEducationService, updateWorkExperienceService } from "../services/about.service";
 import { get } from "http";
 import { createError } from "../exceptions/error.exception";
 
@@ -75,6 +75,21 @@ export const addWorkExperienceController = asyncHandler(async (req: Request, res
   });
 })
 
+export const updateWorkExperienceController = asyncHandler(async (req: Request, res: Response) => {
+  const { id, title, imgUrl, company, startDate, endDate, type, location } = req.body;
+
+  if(!id){
+    throw createError("failed", "Work experience id is required", 400);
+  }
+
+  const updated = await updateWorkExperienceService(id, { title, imgUrl, location, company, startDate, endDate, type });
+  res.status(200).json({
+    status: "success",
+    message: "Work experience updated successfully",
+    details: { workExperience: updated },
+  });
+})
+
 export const deleteWorkExperienceController = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.body;
 
@@ -100,6 +115,8 @@ export const addEducationController = asyncHandler( async (req: Request, res: Re
   });
 })
 
+ 
+
 export const deleteEducationController = asyncHandler( async (req: Request, res: Response) => {
   const { id } = req.body;
 
@@ -114,3 +131,22 @@ export const deleteEducationController = asyncHandler( async (req: Request, res:
     details: { education: deleted },
   });
 })
+
+export const updateEducationController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { id, school, imgUrl, major, location, startDate, endDate, status } = req.body;
+
+    if (!id) {
+      throw createError("failed", "Education id is required", 400);
+    }
+
+    const updated = await updateEducationService(id, { school, imgUrl, major, location, startDate, endDate, status });
+    
+    res.status(200).json({
+      status: "success",
+      message: "Education updated successfully",
+      details: { education: updated },
+    })
+  }
+
+)

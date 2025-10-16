@@ -77,6 +77,30 @@ export const addWorkExperienceService = async (data : {
   return newWork;
 }
 
+export const updateWorkExperienceService = async (id: number, data: {
+  title?: string,
+  company?: string,
+  imgUrl?: string,
+  location?: string,
+  startDate?: Date,
+  endDate?: Date,
+  type?: string,
+}) => {
+  const workExists = await prisma.workExperience.findUnique({ where: { id } });
+
+  if (!workExists) {
+    throw createError("Not Found", `Work experience with ID ${id} not found`, 404);
+  }
+
+  const updatedWork = await prisma.workExperience.update({
+    where: { id },
+    data,
+  })
+
+  logger.info(`Work experience with ID ${id} updated successfully`);
+  return updatedWork;
+}
+
 export const deleteWorkExperienceService = async (id: number) => {
   const work = await prisma.workExperience.findUnique({ where: { id } });
 
@@ -119,3 +143,26 @@ export const deleteEducationService = async (id: number) => {
   return deleted;
 }
 
+export const updateEducationService = async (id: number, data: {
+  school?: string,
+  imgUrl?: string,
+  major?: string,
+  location?: string,
+  startDate?: Date,
+  endDate?: Date,
+  status?: string,
+}) => {
+  const educationExists = await prisma.education.findUnique({ where: { id } });
+
+  if (!educationExists){
+    throw createError("Not Found", `Education with ID ${id} not found`, 404);
+  }
+
+  const updatedEducation = await prisma.education.update({
+    where: { id },
+    data,
+  })
+
+  logger.info(`Education with ID ${id} updated successfully`);
+  return updatedEducation;
+}
